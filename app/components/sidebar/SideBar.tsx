@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import Explorer from "./Explorer";
+import ExplorerPanel from "../panels/ExplorerPanel";
+import SearchPanel from "../panels/SearchPanel";
+import SourceControlPanel from "../panels/SourceControlPanel";
+import DebugPanel from "../panels/DebugPanel";
+import ExtensionsPanel from "../panels/ExtensionsPanel";
+import AdditionalViewsPanel from "../panels/AdditionalViewsPanel";
+import AccountsPanel from "../panels/AccountsPanel";
+import SettingsPanel from "../panels/SettingsPanel";
 
 interface SideBarProps {
   activePanel: string | null;
@@ -60,15 +67,68 @@ function SideBar({ activePanel, width, setWidth }: SideBarProps) {
       {/* Panel content */}
       {activePanel === "files" && (
         <>
-          <Explorer />
+          <ExplorerPanel />
           <div className="p-2 bg-[#252526] flex-1">
             <div className="h-full bg-[#2d2d2d] rounded"></div>
           </div>
         </>
       )}
-      {activePanel === "search" && <div>Search Panel</div>}
-      {activePanel === "debug" && <div>Debug Panel</div>}
-      {activePanel === "extensions" && <div>Extensions Panel</div>}
+      {activePanel === "search" && (
+        <>
+          <SearchPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "sourceControl" && (
+        <>
+          <SourceControlPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "debug" && (
+        <>
+          <DebugPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "extensions" && (
+        <>
+          <ExtensionsPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "additional" && (
+        <>
+          <AdditionalViewsPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "accounts" && (
+        <>
+          <AccountsPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "settings" && (
+        <>
+          <SettingsPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

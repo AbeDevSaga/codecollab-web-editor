@@ -1,1 +1,8 @@
 // These is used for testing monaco tab reading
+SearchPanel
+SourceControlPanel
+DebugPanel
+ExtensionsPanel
+AdditionalViewsPanel
+AccountsPanel
+SettingsPanel

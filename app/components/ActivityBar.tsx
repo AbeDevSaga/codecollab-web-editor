@@ -5,6 +5,9 @@ import {
   VscDebugAlt,
   VscSearch,
   VscExtensions,
+  VscSourceControl,
+  VscAccount,
+  VscSettingsGear,
 } from "react-icons/vsc";
 import { PiDotsThreeBold } from "react-icons/pi";
 
@@ -37,6 +40,16 @@ function ActivityBar({ activePanel, setActivePanel }: ActivityBarProps) {
         <VscSearch className="text-[#d4d4d4] w-6 h-6" />
       </button>
       <button
+        onClick={() => togglePanel("sourceControl")}
+        className={`p-1 rounded ${
+          activePanel === "sourceControl"
+            ? "bg-[#1e1e1e]"
+            : "hover:bg-[#2a2d2e]"
+        }`}
+      >
+        <VscSourceControl className="text-[#d4d4d4] w-6 h-6" />
+      </button>
+      <button
         onClick={() => togglePanel("debug")}
         className={`p-1 rounded ${
           activePanel === "debug" ? "bg-[#1e1e1e]" : "hover:bg-[#2a2d2e]"
@@ -52,7 +65,32 @@ function ActivityBar({ activePanel, setActivePanel }: ActivityBarProps) {
       >
         <VscExtensions className="text-[#d4d4d4] w-6 h-6" />
       </button>
-      <PiDotsThreeBold className="text-[#d4d4d4] w-6 h-6 mt-auto" />
+      <button
+        onClick={() => togglePanel("additional")}
+        className={`p-1 rounded ${
+          activePanel === "additional" ? "bg-[#1e1e1e]" : "hover:bg-[#2a2d2e]"
+        }`}
+      >
+        <PiDotsThreeBold className="text-[#d4d4d4] w-6 h-6" />
+      </button>
+      <div className="mt-auto flex flex-col items-center space-y-6">
+        <button
+          onClick={() => togglePanel("accounts")}
+          className={`p-1 rounded ${
+            activePanel === "accounts" ? "bg-[#1e1e1e]" : "hover:bg-[#2a2d2e]"
+          }`}
+        >
+          <VscAccount className="text-[#d4d4d4] w-6 h-6" />
+        </button>
+        <button
+          onClick={() => togglePanel("settings")}
+          className={`p-1 rounded ${
+            activePanel === "settings" ? "bg-[#1e1e1e]" : "hover:bg-[#2a2d2e]"
+          }`}
+        >
+          <VscSettingsGear className="text-[#d4d4d4] w-6 h-6" />
+        </button>
+      </div>
     </div>
   );
 }

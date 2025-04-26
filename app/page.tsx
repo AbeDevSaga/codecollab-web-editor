@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import TitleBar from "./components/TitleBar";
 import ActivityBar from "./components/ActivityBar";
 import SideBar from "./components/sidebar/SideBar";
@@ -20,11 +20,8 @@ function EditorPage() {
     }
   }, []);
 
-  // Add event listeners for dragging
-
   const toggleTerminal = () => {
     setTerminalOpen(!terminalOpen);
-    // Reset to default height when opening
     if (!terminalOpen) {
       const savedHeight = localStorage.getItem("terminalHeight");
       setTerminalHeight(savedHeight ? parseInt(savedHeight, 10) : 200);
@@ -34,15 +31,11 @@ function EditorPage() {
   return (
     <div className="flex flex-col h-screen bg-[#1e1e1e] text-[#d4d4d4]">
       <TitleBar />
-
-      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Activity Bar (Left) */}
         <ActivityBar
           activePanel={activePanel}
           setActivePanel={setActivePanel}
         />
-        {/* Sidebar */}
         <SideBar
           activePanel={activePanel}
           width={sidebarWidth}
@@ -50,7 +43,6 @@ function EditorPage() {
         />
         <div className="flex-1 flex flex-col bg-[#1e1e1e] relative">
           <EditorSection />
-          {/* Terminal */}
           <Terminal
             terminalOpen={terminalOpen}
             terminalHeight={terminalHeight}
@@ -59,7 +51,6 @@ function EditorPage() {
           />
         </div>
       </div>
-      {/* Status Bar */}
       <StatusBar
         terminalOpen={terminalOpen}
         onTerminalToggle={toggleTerminal}

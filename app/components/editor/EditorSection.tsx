@@ -4,9 +4,11 @@ import MonacoWrapper from "./MonacoWrapper";
 import Tabs from "./Tabs";
 
 interface EditorSectionProps {
+  workspaceId: string;
 }
 
 const EditorSection: React.FC<EditorSectionProps> = ({
+  workspaceId,
 }) => {
   const [activeFile, setActiveFile] = useState<string>("");
   const [openFiles, setOpenFiles] = useState<string[]>([]);

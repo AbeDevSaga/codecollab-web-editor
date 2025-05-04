@@ -11,9 +11,25 @@ interface TokenState {
   user: TUser | null;
 }
 
+const getStoredToken = ():string | null => {
+  if(typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+}
+
+const getStoredUser = ():TUser | null => {
+  if(typeof window !== "undefined") {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  }
+  return null;
+}
+
 export const verifyToken = createAsyncThunk(
   "token/verify",
   async (token: string, { rejectWithValue }) => {
+    console.log("Verifying token:", token);
     try {
       const response = await axios.get<TUser>(
         `${API_URL}/verify-token`,
@@ -23,7 +39,6 @@ export const verifyToken = createAsyncThunk(
           },
         }
       );
-      console.log("Token verification response:", JSON.stringify(response.data));
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(response.data));
       return response.data;
@@ -31,6 +46,7 @@ export const verifyToken = createAsyncThunk(
       if (error.response?.status === 401) {
         // Token is invalid or expired
         localStorage.removeItem("token"); // Clear the token
+        console.log("Token is invalid or expired. Cleared from local storage.");
       }
       return rejectWithValue(error.response.data);
     }
@@ -48,7 +64,19 @@ const tokenSlice = createSlice({
   name: "token",
   initialState,
   reducers: {
-    clearTokenState: () => initialState,
+    clearTokenState: (state) => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return initialState;
+    },
+    // initializeFromStorage: (state) => {
+    //   const storedUser = getStoredUser();
+    //   const storedToken = getStoredToken();
+    //   if (storedUser && storedToken) {
+    //     state.user = storedUser;
+    //     state.isVerified = true;
+    //   }
+    // }
   },
   extraReducers: (builder) => {
     builder

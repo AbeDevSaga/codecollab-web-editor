@@ -1,28 +1,22 @@
 // app/editor/[workspaceId]/page.tsx
 "use client";
-import React, { useEffect, useState } from "react";
+import { setActivePanel, setSidebarWidth, setTerminalHeight, setTerminalOpen } from "@/app/redux/slices/editorSlice";
+import { AppDispatch, RootState } from "@/app/redux/store";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "next/navigation";
+import TitleBar from "../../TitleBar";
+import ActivityBar from "../../ActivityBar";
+import SideBar from "../../sidebar/SideBar";
+import EditorSection from "../EditorSection";
+import Terminal from "../../terminal/Terminal";
+import VideoContainer from "../../video/VideoContainer";
+import StatusBar from "../../statusbar/StatusBar";
 
-import TitleBar from "./components/TitleBar";
-import ActivityBar from "./components/ActivityBar";
-import SideBar from "./components/sidebar/SideBar";
-import StatusBar from "./components/statusbar/StatusBar";
-import Terminal from "./components/terminal/Terminal";
-import EditorSection from "./components/editor/EditorSection";
-import VideoContainer from "./components/video/VideoContainer";
-import { AppDispatch, RootState } from "./redux/store";
-import {
-  setActivePanel,
-  setSidebarWidth,
-  setTerminalHeight,
-  setTerminalOpen,
-} from "./redux/slices/editorSlice";
 
 function EditorPage() {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.token.user);
-  console.log("User from Redux:", user);
+
   const { terminalOpen, terminalHeight, activePanel, sidebarWidth } =
     useSelector((state: RootState) => state.editor);
 
@@ -39,7 +33,6 @@ function EditorPage() {
       );
     }
   };
-
 
   return (
     <div className="flex flex-col h-screen bg-[#1e1e1e] text-[#d4d4d4]">
@@ -85,11 +78,6 @@ function EditorPage() {
             setIsVideoPanelOpen={setIsVideoPanelOpen}
             isMinimized={isMinimized}
             setIsMinimized={setIsMinimized}
-            // setTerminalOpen={setTerminalOpen}
-            // terminalOpen={terminalOpen}
-            // terminalHeight={terminalHeight}
-            // setTerminalHeight={setTerminalHeight}
-            // setSidebarWidth={setSidebarWidth}
           />
         )}
       </div>

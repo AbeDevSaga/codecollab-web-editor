@@ -3,7 +3,7 @@ import { VscFile } from "react-icons/vsc";
 import { FaReact } from "react-icons/fa";
 import { GrJs } from "react-icons/gr";
 import { GiElephant } from "react-icons/gi";
-import type { FileItem } from "../../../types/type";
+import type { FileItem, TFile } from "../../../types/type";
 import { getIconAndColorFromFile } from "@/app/lib/files";
 
 type IconMapping = {
@@ -16,7 +16,7 @@ const iconMapping: IconMapping = {
   php: GiElephant,
 };
 interface FileProps {
-  file: FileItem;
+  file: TFile;
   level: number;
   isSelected: boolean;
   onClick: () => void;

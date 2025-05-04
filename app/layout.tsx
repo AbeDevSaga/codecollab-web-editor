@@ -3,6 +3,7 @@ import "./styles/globals.css";
 import { Providers } from "./provider";
 import { LoadingProvider } from "./context/LoadingContext";
 import LoadingOverlay from "./context/LoadingOverlay";
+import EditorAuthWrapper from "./EditorAuthWrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,8 +20,10 @@ export default function RootLayout({
       <body className="bg-white text-black dark:bg-black dark:text-white">
         <Providers>
           <LoadingProvider>
-            <LoadingOverlay />
-            {children}
+            <EditorAuthWrapper>
+              <LoadingOverlay />
+              {children}
+            </EditorAuthWrapper>
           </LoadingProvider>
         </Providers>
       </body>

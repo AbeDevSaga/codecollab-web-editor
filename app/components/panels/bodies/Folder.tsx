@@ -5,11 +5,11 @@ import {
   VscFolder,
   VscFolderOpened,
 } from "react-icons/vsc";
-import type { FileItem } from "../../../types/type";
+import type {  TFile } from "../../../types/type";
 import FileExplorer from "./FileExplorer";
 
 interface FolderProps {
-  folder: FileItem;
+  folder: TFile;
   level: number;
   isSelected: boolean;
   onClick: () => void;
@@ -54,7 +54,7 @@ const Folder: React.FC<FolderProps> = ({
       {isExpanded && folder.children && folder.children.length > 0 && (
         <div className="ml-2">
           <FileExplorer
-            data={folder.children}
+            files={folder.children}
             level={level + 1}
             selectedPath={folder.path}
             onSelect={onClick}

@@ -2,21 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import editorReducer from "./slices/editorSlice";
 import themeReducer from "./slices/themeSlice";
 import tokenReducer from "./slices/tokenSlice";
-// import { persistStore, persistReducer } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
-
-// Persist configuration
-// const persistConfig = {
-//   key: "root",
-//   storage,
-//   whitelist: ["token"], // Only persist the auth slice
-// };
-
-// const persistedAuthReducer = persistReducer(persistConfig, tokenReducer);
+import fileReducer from "./slices/fileSlice";
 
 const store = configureStore({
   reducer: {
     editor: editorReducer,
+    file: fileReducer,
     theme: themeReducer,
     token: tokenReducer,
   },
@@ -27,6 +18,7 @@ const store = configureStore({
       },
     }),
 });
+
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -6,12 +6,17 @@ import SideBar from "./components/sidebar/SideBar";
 import StatusBar from "./components/statusbar/StatusBar";
 import Terminal from "./components/terminal/Terminal";
 import EditorSection from "./components/editor/EditorSection";
+import VideoContainer from "./components/video/VideoContainer";
 
 function EditorPage() {
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(200);
   const [activePanel, setActivePanel] = useState<string | null>("files");
   const [sidebarWidth, setSidebarWidth] = useState(250);
+
+  // Video States
+  const [isVideoPanelOpen, setIsVideoPanelOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     const savedHeight = localStorage.getItem("terminalHeight");
@@ -34,12 +39,12 @@ function EditorPage() {
       <div className="flex flex-1 overflow-hidden">
         <ActivityBar
           activePanel={activePanel}
-          setActivePanel={setActivePanel}
-        />
+          setActivePanel={setActivePanel}  />
         <SideBar
           activePanel={activePanel}
           width={sidebarWidth}
           setWidth={setSidebarWidth}
+          setIsVideoPanelOpen={setIsVideoPanelOpen}
         />
         <div className="flex-1 flex flex-col bg-[#1e1e1e] relative">
           <EditorSection />
@@ -50,11 +55,27 @@ function EditorPage() {
             setTerminalOpen={setTerminalOpen}
           />
         </div>
+        {isVideoPanelOpen && (
+        
+        <VideoContainer
+          setIsVideoPanelOpen={setIsVideoPanelOpen} 
+          isMinimized={isMinimized}
+          setIsMinimized={setIsMinimized}
+          // setTerminalOpen={setTerminalOpen} 
+          // terminalOpen={terminalOpen} 
+          // terminalHeight={terminalHeight} 
+          // setTerminalHeight={setTerminalHeight}
+          // setSidebarWidth={setSidebarWidth}
+        />
+      )}
       </div>
       <StatusBar
         terminalOpen={terminalOpen}
         onTerminalToggle={toggleTerminal}
+        isMinimized={isMinimized}
+        setIsMinimized={setIsMinimized}
       />
+      
     </div>
   );
 }

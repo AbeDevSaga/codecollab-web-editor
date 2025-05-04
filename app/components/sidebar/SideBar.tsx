@@ -8,14 +8,16 @@ import ExtensionsPanel from "../panels/ExtensionsPanel";
 import AdditionalViewsPanel from "../panels/AdditionalViewsPanel";
 import AccountsPanel from "../panels/AccountsPanel";
 import SettingsPanel from "../panels/SettingsPanel";
+import VideoPanel from "../video/VideoPanel";
 
 interface SideBarProps {
   activePanel: string | null;
   width: number;
   setWidth: (width: number) => void;
+  setIsVideoPanelOpen: (isOpen: boolean) => void;
 }
 
-function SideBar({ activePanel, width, setWidth }: SideBarProps) {
+function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarProps) {
   const startX = useRef(0);
   const startWidth = useRef(0);
   const [isResizing, setIsResizing] = useState(false);
@@ -100,6 +102,14 @@ function SideBar({ activePanel, width, setWidth }: SideBarProps) {
       {activePanel === "extensions" && (
         <>
           <ExtensionsPanel />
+          <div className="p-2 bg-[#252526] flex-1">
+            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          </div>
+        </>
+      )}
+      {activePanel === "video" && (
+        <>
+          <VideoPanel setIsVideoPanelOpen={setIsVideoPanelOpen} />
           <div className="p-2 bg-[#252526] flex-1">
             <div className="h-full bg-[#2d2d2d] rounded"></div>
           </div>

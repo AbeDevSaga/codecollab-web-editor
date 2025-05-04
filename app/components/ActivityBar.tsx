@@ -10,6 +10,7 @@ import {
   VscSettingsGear,
 } from "react-icons/vsc";
 import { PiDotsThreeBold } from "react-icons/pi";
+import { IoVideocamOutline } from "react-icons/io5";
 
 interface ActivityBarProps {
   activePanel: string | null;
@@ -64,6 +65,14 @@ function ActivityBar({ activePanel, setActivePanel }: ActivityBarProps) {
         }`}
       >
         <VscExtensions className="text-[#d4d4d4] w-6 h-6" />
+      </button>
+      <button
+        onClick={() => togglePanel("video")}
+        className={`p-1 rounded ${
+          activePanel === "video" ? "bg-[#1e1e1e]" : "hover:bg-[#2a2d2e]"
+        }`}
+      >
+        <IoVideocamOutline className="text-[#d4d4d4] w-6 h-6" />
       </button>
       <button
         onClick={() => togglePanel("additional")}

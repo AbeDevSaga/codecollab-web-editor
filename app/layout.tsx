@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./styles/globals.css";
+import { Providers } from "./provider";
+import { LoadingProvider } from "./context/LoadingContext";
+import LoadingOverlay from "./context/LoadingOverlay";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,10 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className="bg-white text-black dark:bg-black dark:text-white"
-      >
-        {children}
+      <body className="bg-white text-black dark:bg-black dark:text-white">
+        <Providers>
+          <LoadingProvider>
+            <LoadingOverlay />
+            {children}
+          </LoadingProvider>
+        </Providers>
       </body>
     </html>
   );

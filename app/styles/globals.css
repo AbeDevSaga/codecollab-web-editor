@@ -53,3 +53,33 @@ body {
 .scrollbar-transparent::-webkit-scrollbar-thumb:hover {
   background-color: rgb(120 120 120 / 0.6);
 }
+
+
+
+/* Hide scrollbar but keep scrolling functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Optional: If you want a custom scrollbar instead of hiding it */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #252526;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #37373d;
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2a2d2e;
+}

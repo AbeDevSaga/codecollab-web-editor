@@ -2,6 +2,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import MonacoWrapper from "./MonacoWrapper";
 import Tabs from "./Tabs";
+import { AppDispatch, RootState } from "@/app/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { closeFile, openFile, updateFileContent } from "@/app/redux/slices/editorSlice";
 
 interface EditorSectionProps {
   workspaceId: string;
@@ -10,65 +13,47 @@ interface EditorSectionProps {
 const EditorSection: React.FC<EditorSectionProps> = ({
   workspaceId,
 }) => {
-  const [activeFile, setActiveFile] = useState<string>("");
-  const [openFiles, setOpenFiles] = useState<string[]>([]);
   const [fileContent, setFileContent] = useState<Record<string, string>>({});
+
+  const dispatch = useDispatch<AppDispatch>();
   const editorContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with a default file
-  useEffect(() => {
-    const defaultFile = "/index.txt";
-    fetch(defaultFile)
-      .then((response) => response.text())
-      .then((content) => {
-        setFileContent((prev) => ({ ...prev, [defaultFile]: content }));
-        setOpenFiles([defaultFile]);
-        setActiveFile(defaultFile);
-      })
-      .catch((error) => {
-        console.error("Error loading default file:", error);
-        // Fallback content if file doesn't exist
-        const fallbackContent =
-          "Welcome to the editor!\n\nThis is the default file.\n\nStart editing here...";
-        setFileContent((prev) => ({ ...prev, [defaultFile]: fallbackContent }));
-        setOpenFiles([defaultFile]);
-        setActiveFile(defaultFile);
-      });
-  }, []);
+  // Get editor state from Redux
+  const { openFiles, activeFile } = useSelector((state: RootState) => {
+    const workspace = state.editor.workspaces[workspaceId] || {
+      openFiles: [],
+      activeFile: null,
+    };
+    return {
+      openFiles: workspace.openFiles,
+      activeFile: workspace.activeFile,
+    };
+  });
 
   const handleTabChange = (filePath: string) => {
-    setActiveFile(filePath);
-    if (!openFiles.includes(filePath)) {
-      setOpenFiles([...openFiles, filePath]);
-      if (!fileContent[filePath]) {
-        fetch(filePath)
-          .then((response) => response.text())
-          .then((content) => {
-            setFileContent((prev) => ({ ...prev, [filePath]: content }));
-          })
-          .catch((error) => {
-            console.error("Error loading file:", error);
-            setFileContent((prev) => ({ ...prev, [filePath]: "" }));
-          });
-      }
+    const file = openFiles.find(f => f.path === filePath);
+    if (file) {
+      dispatch(openFile({ workspaceId, file }));
     }
   };
 
   const closeTab = (filePath: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const newOpenFiles = openFiles.filter((file) => file !== filePath);
-    setOpenFiles(newOpenFiles);
-
-    if (activeFile === filePath) {
-      setActiveFile(newOpenFiles[newOpenFiles.length - 1] || "");
-    }
+    dispatch(closeFile({ workspaceId, filePath }));
   };
 
   const handleEditorChange = (value: string | undefined) => {
     if (activeFile && value !== undefined) {
-      setFileContent((prev) => ({ ...prev, [activeFile]: value }));
+      dispatch(updateFileContent({ 
+        workspaceId, 
+        filePath: activeFile, 
+        content: value 
+      }));
     }
   };
+
+  // Find the active file content
+  const activeFileContent = openFiles.find(f => f.path === activeFile)?.content || "";
 
   return (
     <div
@@ -79,7 +64,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
       {openFiles.length > 0 && (
         <div className="h-8 flex items-center bg-[#252526] border-b border-[#1e1e1e]">
           <Tabs
-            files={openFiles}
+            files={openFiles.map(f => f.path)}
             activeFile={activeFile}
             onTabChange={handleTabChange}
             onCloseTab={closeTab}
@@ -93,7 +78,7 @@ const EditorSection: React.FC<EditorSectionProps> = ({
           <div className="absolute inset-0">
             <MonacoWrapper
               filePath={activeFile}
-              value={fileContent[activeFile] || ""}
+              value={activeFileContent}
               onChange={handleEditorChange}
             />
           </div>

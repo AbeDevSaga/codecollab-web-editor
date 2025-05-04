@@ -168,6 +168,10 @@ export type TFile = {
   project?: TProject;
   organization?: TOrganization;
 
+  isActive?: boolean;
+  isDirty?: boolean;
+  content?: string;
+
   sharedWith?: TUser[];
 
   isVerssionControlled?: boolean;

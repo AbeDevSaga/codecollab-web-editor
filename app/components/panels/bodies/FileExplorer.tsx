@@ -7,17 +7,17 @@ interface FileExplorerProps {
   files: TFile[];
   level?: number;
   selectedPath?: string;
-  onSelect?: (path: string) => void;
+  onFileSelect: (file: TFile) => void; 
 }
 
 const FileExplorer: React.FC<FileExplorerProps> = ({ 
   files, 
   level = 0, 
   selectedPath, 
-  onSelect 
+  onFileSelect 
 }) => {
   return (
-    <div className="w-full">
+    <div onClick={(e) => e.stopPropagation()} className="w-full">
       {files.map((file) => {
         const isSelected = selectedPath === file.path;
         
@@ -28,7 +28,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
               file={file}
               level={level}
               isSelected={isSelected}
-              onClick={() => onSelect && onSelect(file.path)}
+              onClick={() => onFileSelect(file)}
             />
           );
         }
@@ -39,7 +39,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
             folder={file}
             level={level}
             isSelected={isSelected}
-            onClick={() => onSelect && onSelect(file.path)}
+            onFileSelect={onFileSelect}
           />
         );
       })}

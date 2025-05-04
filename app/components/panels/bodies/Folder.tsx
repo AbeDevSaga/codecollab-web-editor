@@ -12,20 +12,24 @@ interface FolderProps {
   folder: TFile;
   level: number;
   isSelected: boolean;
-  onClick: () => void;
+  onFileSelect: (file: TFile) => void; 
 }
 
 const Folder: React.FC<FolderProps> = ({
   folder,
   level,
   isSelected,
-  onClick,
+  onFileSelect,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsExpanded(!isExpanded);
+  };
+
+  const handleFolderClick = () => {
+    onFileSelect(folder); 
   };
 
   return (
@@ -35,7 +39,7 @@ const Folder: React.FC<FolderProps> = ({
           isSelected ? "bg-[#37373d]" : "hover:bg-[#2a2d2e]"
         } cursor-pointer`}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
-        onClick={onClick}
+        onClick={handleFolderClick}
       >
         <div onClick={handleClick} className="mr-1">
           {isExpanded ? (
@@ -57,7 +61,7 @@ const Folder: React.FC<FolderProps> = ({
             files={folder.children}
             level={level + 1}
             selectedPath={folder.path}
-            onSelect={onClick}
+            onFileSelect={onFileSelect}
           />
         </div>
       )}

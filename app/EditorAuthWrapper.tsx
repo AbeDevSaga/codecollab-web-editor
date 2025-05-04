@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from './redux/store';
 import { verifyToken } from './redux/slices/tokenSlice';
 import { initializeWorkspace, setTerminalHeight } from './redux/slices/editorSlice';
 import { useLoading } from './context/LoadingContext';
+import { fetchAllFiles } from './redux/slices/fileSlice';
 
 export default function EditorAuthWrapper({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,6 +51,7 @@ export default function EditorAuthWrapper({ children }: { children: React.ReactN
   useEffect(() => {
     if (isVerified && user) {
       // Using _id for both workspaceId and userId
+      dispatch(fetchAllFiles());
       dispatch(initializeWorkspace({
         workspaceId: user._id,
         userId: user._id

@@ -32,7 +32,10 @@ const File: React.FC<FileProps> = ({ file, level, isSelected, onClick }) => {
         isSelected ? "bg-[#37373d]" : "hover:bg-[#2a2d2e]"
       } cursor-pointer`}
       style={{ paddingLeft: `${level * 12 + 12}px` }}
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
     >
       {IconComponent && <IconComponent className={`${iconColor} mr-2`} />}
       <span className="text-[#d4d4d4] text-sm">{file.name}</span>

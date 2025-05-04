@@ -8,7 +8,7 @@ import ExtensionsPanel from "../panels/ExtensionsPanel";
 import AdditionalViewsPanel from "../panels/AdditionalViewsPanel";
 import AccountsPanel from "../panels/AccountsPanel";
 import SettingsPanel from "../panels/SettingsPanel";
-import VideoPanel from "../video/VideoPanel";
+import VideoPanel from "../panels/VideoPanel";
 
 interface SideBarProps {
   activePanel: string | null;

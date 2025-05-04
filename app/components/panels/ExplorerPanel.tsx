@@ -1,9 +1,18 @@
 import React from "react";
+import ExplorerTab from "./tabs/ExplorerTab";
+import FileExplorer from "./bodies/FileExplorer";
+import { fileTreeData } from "@/app/types/fileTree";
 
 function ExplorerPanel() {
   return (
-    <div className="h-8 flex items-center px-2 bg-[#252526]">
-      <span className="text-xs font-semibold">EXPLORER</span>
+    <div className="flex flex-col h-full w-full bg-[#252526]">
+      <ExplorerTab />
+
+      {/* Content section - takes remaining space */}
+      <div className="flex-1 bg-[#1e1e1e] overflow-auto scrollbar-transparent">
+        {/* Your explorer content goes here */}
+        <FileExplorer data={fileTreeData} />
+      </div>
     </div>
   );
 }

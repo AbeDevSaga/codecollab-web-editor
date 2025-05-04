@@ -145,6 +145,15 @@ export type TOrganization = {
   updatedAt?: Date;
 };
 
+export type FileItem = {
+  id: string;
+  name: string;
+  type: 'file' | 'folder';
+  path: string;
+  extension?: string;
+  children?: FileItem[];
+}
+
 export type TFile = {
   _id?: string;
   name: string;

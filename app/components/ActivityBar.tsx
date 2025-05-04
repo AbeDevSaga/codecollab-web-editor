@@ -20,6 +20,7 @@ interface ActivityBarProps {
 function ActivityBar({ activePanel, setActivePanel }: ActivityBarProps) {
   const togglePanel = (panel: string) => {
     setActivePanel(activePanel === panel ? null : panel);
+    console.log(`Toggled ${panel} panel`);
   };
 
   return (

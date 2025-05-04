@@ -1,8 +1,8 @@
 // app/editor/[workspaceId]/page.tsx
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import TitleBar from "./components/TitleBar";
 import ActivityBar from "./components/ActivityBar";
@@ -10,10 +10,9 @@ import SideBar from "./components/sidebar/SideBar";
 import StatusBar from "./components/statusbar/StatusBar";
 import Terminal from "./components/terminal/Terminal";
 import EditorSection from "./components/editor/EditorSection";
-<<<<<<< HEAD
 import VideoContainer from "./components/video/VideoContainer";
-=======
 import { AppDispatch, RootState } from "./redux/store";
+import { verifyToken } from "./redux/slices/tokenSlice";
 import {
   initializeWorkspace,
   setActivePanel,
@@ -21,12 +20,9 @@ import {
   setTerminalHeight,
   setTerminalOpen,
 } from "./redux/slices/editorSlice";
-import { verifyToken } from "./redux/slices/tokenSlice";
->>>>>>> 156eadee4d008c03aabcfb06844839be0c9a5a20
 
 function EditorPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const params = useParams();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const user = useSelector((state: RootState) => state.token.user);
@@ -86,21 +82,21 @@ function EditorPage() {
       <div className="flex flex-1 overflow-hidden">
         <ActivityBar
           activePanel={activePanel}
-<<<<<<< HEAD
-          setActivePanel={setActivePanel}  />
-        <SideBar
-          activePanel={activePanel}
-          width={sidebarWidth}
-          setWidth={setSidebarWidth}
-          setIsVideoPanelOpen={setIsVideoPanelOpen}
-=======
           setActivePanel={(panel) => dispatch(setActivePanel(panel))}
         />
         <SideBar
           activePanel={activePanel}
           width={sidebarWidth}
-          setWidth={(width) => dispatch(setSidebarWidth(width))}
->>>>>>> 156eadee4d008c03aabcfb06844839be0c9a5a20
+          setWidth={(width) => {
+            dispatch(setSidebarWidth(width));
+            if (user?._id) {
+              localStorage.setItem(
+                `sidebarWidth-${user._id}`,
+                width.toString()
+              );
+            }
+          }}
+          setIsVideoPanelOpen={setIsVideoPanelOpen}
         />
         <div className="flex-1 flex flex-col bg-[#1e1e1e] relative">
           <EditorSection workspaceId={user?._id || ""} />
@@ -120,18 +116,17 @@ function EditorPage() {
           />
         </div>
         {isVideoPanelOpen && (
-        
-        <VideoContainer
-          setIsVideoPanelOpen={setIsVideoPanelOpen} 
-          isMinimized={isMinimized}
-          setIsMinimized={setIsMinimized}
-          // setTerminalOpen={setTerminalOpen} 
-          // terminalOpen={terminalOpen} 
-          // terminalHeight={terminalHeight} 
-          // setTerminalHeight={setTerminalHeight}
-          // setSidebarWidth={setSidebarWidth}
-        />
-      )}
+          <VideoContainer
+            setIsVideoPanelOpen={setIsVideoPanelOpen}
+            isMinimized={isMinimized}
+            setIsMinimized={setIsMinimized}
+            // setTerminalOpen={setTerminalOpen}
+            // terminalOpen={terminalOpen}
+            // terminalHeight={terminalHeight}
+            // setTerminalHeight={setTerminalHeight}
+            // setSidebarWidth={setSidebarWidth}
+          />
+        )}
       </div>
       <StatusBar
         terminalOpen={terminalOpen}
@@ -139,7 +134,6 @@ function EditorPage() {
         isMinimized={isMinimized}
         setIsMinimized={setIsMinimized}
       />
-      
     </div>
   );
 }

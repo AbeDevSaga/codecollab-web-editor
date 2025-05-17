@@ -13,8 +13,6 @@ interface EditorSectionProps {
 const EditorSection: React.FC<EditorSectionProps> = ({
   workspaceId,
 }) => {
-  const [fileContent, setFileContent] = useState<Record<string, string>>({});
-
   const dispatch = useDispatch<AppDispatch>();
   const editorContainerRef = useRef<HTMLDivElement>(null);
 

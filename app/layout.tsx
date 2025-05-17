@@ -4,6 +4,7 @@ import { Providers } from "./provider";
 import { LoadingProvider } from "./context/LoadingContext";
 import LoadingOverlay from "./context/LoadingOverlay";
 import EditorAuthWrapper from "./EditorAuthWrapper";
+import MockEditorAuthWrapper from "./fakers/MockEditorAuthWrapper";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,10 +21,12 @@ export default function RootLayout({
       <body className="bg-white text-black dark:bg-black dark:text-white">
         <Providers>
           <LoadingProvider>
-            <EditorAuthWrapper>
-              <LoadingOverlay />
-              {children}
-            </EditorAuthWrapper>
+            <MockEditorAuthWrapper>
+              {/* <EditorAuthWrapper> */}
+                <LoadingOverlay />
+                {children}
+              {/* </EditorAuthWrapper> */}
+            </MockEditorAuthWrapper>
           </LoadingProvider>
         </Providers>
       </body>

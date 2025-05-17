@@ -21,12 +21,12 @@ export default function RootLayout({
       <body className="bg-white text-black dark:bg-black dark:text-white">
         <Providers>
           <LoadingProvider>
-            <MockEditorAuthWrapper>
-              {/* <EditorAuthWrapper> */}
+            {/* <MockEditorAuthWrapper> */}
+              <EditorAuthWrapper>
                 <LoadingOverlay />
                 {children}
-              {/* </EditorAuthWrapper> */}
-            </MockEditorAuthWrapper>
+              </EditorAuthWrapper>
+            {/* </MockEditorAuthWrapper> */}
           </LoadingProvider>
         </Providers>
       </body>

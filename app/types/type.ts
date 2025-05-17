@@ -77,6 +77,7 @@ export type TChatGroup = {
   isGroupChat?: boolean;
   avatar?: string;
   organization?: string;
+  project?: string;
   participants?: TUser[];
   lastMessage?: string;
   invitationLink?: string;

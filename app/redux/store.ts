@@ -3,11 +3,15 @@ import editorReducer from "./slices/editorSlice";
 import themeReducer from "./slices/themeSlice";
 import tokenReducer from "./slices/tokenSlice";
 import fileReducer from "./slices/fileSlice";
+import chatGroupReducer from "./slices/chatGroupSlice";
+import projectReducer from "./slices/projectSlice";
 
 const store = configureStore({
   reducer: {
     editor: editorReducer,
     file: fileReducer,
+    chatGroup: chatGroupReducer,
+    project:projectReducer,
     theme: themeReducer,
     token: tokenReducer,
   },

@@ -5,22 +5,27 @@ const JWT_SECRET="9f3A&XnP!qL7eTzKmR2Bj5vQpC8xG0sYWdMhJ1oLf6H9Nc4ZkXrPbVt7wJmE2Q
 const users = [
   {
     _id: "67cd5c7cd1757dabb72ade8b",
-    role: "admin",
+    role: "Admin",
     name: "AdminUser"
   },
   {
+    _id: "6824e4c7f37ec6db5b338392",
+    role: "Project Manager",
+    name: "Project Manager"
+  },
+  {
     _id: "67cd5c7ad1757dabb72ade5f",
-    role: "user",
+    role: "User",
     name: "Kyle_Huel"
   },
   {
     _id: "67cd5c7ad1757dabb72ade60",
-    role: "user",
+    role: "User",
     name: "Carlo_Fritsch43"
   },
   {
     _id: "67cd5c7ad1757dabb72ade61",
-    role: "user",
+    role: "User",
     name: "Niko32"
   }
 ];

@@ -8,6 +8,7 @@ import { verifyToken } from './redux/slices/tokenSlice';
 import { initializeWorkspace, setTerminalHeight } from './redux/slices/editorSlice';
 import { useLoading } from './context/LoadingContext';
 import { fetchAllFiles } from './redux/slices/fileSlice';
+import { fetchAllChats } from './redux/slices/chatGroupSlice';
 
 export default function EditorAuthWrapper({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,6 +53,7 @@ export default function EditorAuthWrapper({ children }: { children: React.ReactN
     if (isVerified && user) {
       // Using _id for both workspaceId and userId
       dispatch(fetchAllFiles());
+      dispatch(fetchAllChats());
       dispatch(initializeWorkspace({
         workspaceId: user._id,
         userId: user._id

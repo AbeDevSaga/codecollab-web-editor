@@ -5,22 +5,30 @@ import SearchPanel from "../panels/SearchPanel";
 import SourceControlPanel from "../panels/SourceControlPanel";
 import DebugPanel from "../panels/DebugPanel";
 import ExtensionsPanel from "../panels/ExtensionsPanel";
-import AdditionalViewsPanel from "../panels/AdditionalViewsPanel";
 import AccountsPanel from "../panels/AccountsPanel";
-import SettingsPanel from "../panels/SettingsPanel";
 import VideoPanel from "../panels/VideoPanel";
+import ExplorerSetting from "../Setting/ExplorerSetting";
 
 interface SideBarProps {
   activePanel: string | null;
   width: number;
   setWidth: (width: number) => void;
   setIsVideoPanelOpen: (isOpen: boolean) => void;
+  
 }
 
-function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarProps) {
+function SideBar({
+  activePanel,
+  width,
+  setWidth,
+  setIsVideoPanelOpen,
+}: SideBarProps) {
   const startX = useRef(0);
   const startWidth = useRef(0);
   const [isResizing, setIsResizing] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const startResize = (e: React.MouseEvent) => {
     setIsResizing(true);
@@ -37,6 +45,7 @@ function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarP
       let newWidth = startWidth.current + deltaX;
       newWidth = Math.max(200, Math.min(400, newWidth));
       setWidth(newWidth);
+
     };
 
     const stopResize = () => {
@@ -52,6 +61,21 @@ function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarP
       document.removeEventListener("mouseup", stopResize);
     };
   }, [isResizing, setWidth]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Close if clicked outside both the button and dropdown
+      if (dropdownRef.current && 
+          !dropdownRef.current.contains(event.target as Node) &&
+          buttonRef.current &&
+          !buttonRef.current.contains(event.target as Node)) {
+        setShowSettings(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (!activePanel) return null;
 
@@ -117,12 +141,30 @@ function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarP
       )}
       {activePanel === "additional" && (
         <>
-          <AdditionalViewsPanel />
-          <div className="p-2 bg-[#252526] flex-1">
-            <div className="h-full bg-[#2d2d2d] rounded"></div>
+          <div className="relative">
+            {/* Main Explorer Panel */}
+            <div className="relative top-80">
+              <ExplorerSetting />
+            </div>
+
+            {/* Settings Dropdown */}
+            {showSettings && (
+              <div
+                className="absolute rounded shadow-gray-800 left-1/2 -translate-x-1/2 top-[calc(80px+100%)] mt-1 z-50"
+                ref={dropdownRef}
+              >
+                <ExplorerSetting
+                  onClose={() => setShowSettings(false)}
+                  isDropdown={true}
+                />
+                  <div className="p-2 bg-[#252526] flex-1">
+                    </div>
+              </div>
+            )}
           </div>
         </>
       )}
+
       {activePanel === "accounts" && (
         <>
           <AccountsPanel />
@@ -133,7 +175,7 @@ function SideBar({ activePanel, width, setWidth, setIsVideoPanelOpen }: SideBarP
       )}
       {activePanel === "settings" && (
         <>
-          <SettingsPanel />
+          <ExplorerSetting />
           <div className="p-2 bg-[#252526] flex-1">
             <div className="h-full bg-[#2d2d2d] rounded"></div>
           </div>

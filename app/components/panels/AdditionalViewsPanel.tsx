@@ -1,11 +1,11 @@
-import React from 'react'
+// import React from 'react';
 
-function AdditionalViewsPanel() {
-  return (
-    <div className="h-8 flex items-center px-2 bg-[#252526]">
-      <span className="text-xs font-semibold">AdditionalViewsPanel</span>
-    </div>
-  )
-}
+// function AdditionalViewsPanel() {
+//   return (
+//     <div className='w-full bg-red-500'>
+     
+//     </div>
+//   )
+// }
 
-export default AdditionalViewsPanel
+// export default AdditionalViewsPanel

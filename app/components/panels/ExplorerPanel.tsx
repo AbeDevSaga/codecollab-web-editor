@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "@/app/redux/store";
 import { fetchAllFiles } from "@/app/redux/slices/fileSlice";
 import { openFile } from "@/app/redux/slices/editorSlice";
 import { TFile } from "@/app/types/type";
+import RootFolder from "./bodies/RootFolder";
 
 function ExplorerPanel() {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,11 +37,12 @@ function ExplorerPanel() {
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#252526]">
+    <div className="flex flex-col h-full w-full ">
       <ExplorerTab />
+      <RootFolder />
 
       {/* Content section - takes remaining space */}
-      <div className="flex-1 bg-[#1e1e1e] overflow-auto scrollbar-transparent">
+      <div className="flex-1 overflow-auto scrollbar-transparent">
         {/* Your explorer content goes here */}
         <FileExplorer files={files || []} onFileSelect={handleFileSelect} />
       </div>

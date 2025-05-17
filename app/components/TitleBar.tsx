@@ -1,4 +1,6 @@
 import React from "react";
+import { PiDotsThreeBold } from "react-icons/pi";
+import { VscPlay, VscSplitHorizontal, VscGitCompare } from "react-icons/vsc";
 
 function TitleBar() {
   return (
@@ -9,6 +11,20 @@ function TitleBar() {
         <div className="w-3 h-3 rounded-full bg-[#27c93f]"></div>
       </div>
       <span className="text-sm">Code Collab IDE</span>
+      <div className="ml-auto space-x-3">
+        <button title="Run">
+          <VscPlay className="w-6 h-6 " />
+        </button>
+        <button title="Compare">
+          <VscGitCompare className="w-6 h-6" />
+        </button>
+        <button title="Split View">
+          <VscSplitHorizontal className="w-6 h-6" />
+        </button>
+        <button title="More Options">
+          <PiDotsThreeBold className="w-6 h-6" />
+        </button>
+      </div>
     </div>
   );
 }

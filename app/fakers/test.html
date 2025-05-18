@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    const socket = new WebSocket('ws://10.230.29.218/socket.io');
+    
+    socket.onopen = () => console.log("WS Connected!");
+    socket.onmessage = (e) => console.log("Message:", e.data);
+    socket.onerror = (e) => console.error("WS Error:", e);
+    socket.onclose = () => console.log("WS Disconnected.");
+  </script>
+</body>
+</html>

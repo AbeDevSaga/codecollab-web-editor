@@ -169,6 +169,18 @@ const fileSlice = createSlice({
       state.currentFile = null;
       state.fileStructure = [];
     },
+    updateFileContent: (state, action: PayloadAction<{id: string, content: string}>) => {
+      const { id, content } = action.payload;
+      const fileIndex = state.files.findIndex(file => file._id === id);
+      
+      if (fileIndex !== -1) {
+        state.files[fileIndex].content = content;
+      }
+      
+      if (state.currentFile?._id === id) {
+        state.currentFile.content = content;
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -314,5 +326,5 @@ const fileSlice = createSlice({
   },
 });
 
-export const { setCurrentFile, clearFiles } = fileSlice.actions;
+export const { setCurrentFile, clearFiles, updateFileContent } = fileSlice.actions;
 export default fileSlice.reducer;

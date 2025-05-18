@@ -65,9 +65,11 @@ export const editorSlice = createSlice({
       action: PayloadAction<{
         workspaceId: string;
         file: TFile;
+        content?: string;
+        forceRefresh?: boolean;
       }>
     ) => {
-      const { workspaceId, file } = action.payload;
+      const { workspaceId, file, content, forceRefresh } = action.payload;
       const workspace = state.workspaces[workspaceId];
 
       console.log("Processing openFile:", {
@@ -81,19 +83,36 @@ export const editorSlice = createSlice({
       const existingFileIndex = workspace.openFiles.findIndex(
         (f) => f.path === file.path
       );
+      console.log("existingFileIndex: ", existingFileIndex);
 
       if (existingFileIndex === -1) {
+        // First deactivate all other files
+        workspace.openFiles.forEach((f) => {
+          f.isActive = false;
+        });
+        // Then add the new file as active
         workspace.openFiles.push({
           ...file,
+          content: content || file.content,
           isActive: true,
           isDirty: false,
         });
       } else {
-        // Update the existing file
+        // First deactivate all other files
+        workspace.openFiles.forEach((f) => {
+          f.isActive = false;
+        });
+        /// Then activate the existing file
+        workspace.openFiles.forEach((f) => {
+          f.isActive = false;
+        });
         workspace.openFiles[existingFileIndex] = {
-          ...workspace.openFiles[existingFileIndex],
+          ...(forceRefresh ? file : workspace.openFiles[existingFileIndex]), // Use fresh file data if forceRefresh...file,
+          content: content || file.content,
           isActive: true,
-          isDirty: false,
+          isDirty: content
+            ? false
+            : workspace.openFiles[existingFileIndex].isDirty,
         };
       }
       // Set all other files as inactive
@@ -102,6 +121,7 @@ export const editorSlice = createSlice({
       });
 
       workspace.activeFile = file.path;
+      console.log("workspace.activeFile: ", workspace.activeFile);
     },
     closeFile: (
       state,
@@ -167,11 +187,18 @@ export const editorSlice = createSlice({
       const workspace = state.workspaces[workspaceId];
 
       if (workspace) {
-        const file = workspace.openFiles.find((f) => f.path === filePath);
-        if (file) {
-          file.content = content;
-          file.isDirty = isDirty ?? true;
-        }
+        workspace.openFiles.forEach((file) => {
+          if (file.path === filePath) {
+            file.content = content;
+            file.isDirty = isDirty ?? true;
+          }
+        });
+
+        // const file = workspace.openFiles.find((f) => f.path === filePath);
+        // if (file) {
+        //   file.content = content;
+        //   file.isDirty = isDirty ?? true;
+        // }
       }
     },
     toggleFolderExpand: (

@@ -4,7 +4,7 @@ const axios = require("axios");
 
 // Configuration
 const HOST = "10.230.29.218";
-const TEST_PATHS = ["/files/socket.io", "/socket.io", "/files", "/"];
+const TEST_PATHS = ["/video/socket.io", "/socket.io", "/video", "/"];
 const TEST_OPTIONS = [
   { transports: ["websocket"], upgrade: false },
   { transports: ["polling"] },

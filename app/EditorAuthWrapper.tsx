@@ -9,7 +9,8 @@ import { initializeWorkspace, setTerminalHeight } from './redux/slices/editorSli
 import { useLoading } from './context/LoadingContext';
 import { fetchAllFiles } from './redux/slices/fileSlice';
 import { fetchAllChats } from './redux/slices/chatGroupSlice';
-import { socketService } from './services/socketService';
+import { fileSocketService } from './sockets/fileSocketService';
+import { videoSocketService } from './sockets/videoSocketService';
 
 export default function EditorAuthWrapper({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -54,7 +55,8 @@ export default function EditorAuthWrapper({ children }: { children: React.ReactN
     if (isVerified && user) {
       // Initialize WebSocket connection
       const token = searchParams.get('token') || '';
-      socketService.connect(token);
+      fileSocketService.connect(token);
+      videoSocketService.connect(token);
       // Using _id for both workspaceId and userId
       dispatch(fetchAllFiles());
       dispatch(fetchAllChats());

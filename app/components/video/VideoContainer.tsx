@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FiMinus, FiMaximize2, FiX } from "react-icons/fi";
 import VideoGrid from "./GridSection";
 import TabBar from "./TabBar";
 import SideBar from "./SideBar";

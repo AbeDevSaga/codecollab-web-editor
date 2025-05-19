@@ -90,6 +90,8 @@ export type TChatGroup = {
 }
 
 export type TUser = {
+  id: Key | null | undefined;
+  name: any;
   _id: string;
   username: string;
   email: string;

@@ -90,8 +90,6 @@ function SearchPanel() {
 
   const handleResultClick = (result: SearchResult) => {
     console.log('Opening:', result);
-    // In a real editor, this would open the file at the specific line
-    // Example: editor.openFile(result.path, result.lineNumber);
   };
 
   return (
@@ -159,7 +157,7 @@ function SearchPanel() {
           </div>
         ) : query ? (
           <div className="flex items-center justify-center p-4 text-gray-400">
-            <span>No results found for "{query}"</span>
+            <span>No results found for &quot;{query}&quot;</span>
           </div>
         ) : (
           <div className="p-4 text-gray-400 text-sm">

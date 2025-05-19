@@ -3,7 +3,8 @@ const io = require("socket.io-client");
 const axios = require("axios");
 
 // Configuration
-const HOST = "10.230.29.218";
+// const HOST = "10.230.29.218";
+const HOST = "localhost:5000"
 const TEST_PATHS = ["/video/socket.io", "/socket.io", "/video", "/"];
 const TEST_OPTIONS = [
   { transports: ["websocket"], upgrade: false },

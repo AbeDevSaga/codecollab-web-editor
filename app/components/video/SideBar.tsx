@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FiPhoneCall, FiX } from "react-icons/fi";
-
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/redux/store";
 import {
@@ -13,13 +12,22 @@ import { formatChatMembers } from "@/app/utils/userUtils";
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  startCall: (chatGroupId: string, participants: string[]) => void;
+  endCall: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  onClose,
+  startCall,
+  endCall
+}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [activeCall, setActiveCall] = useState(false);
   const { chats, currentChat } = useSelector(
     (state: RootState) => state.chatGroup
   );
+  const currentChatId = currentChat?._id ? currentChat?._id : "";
   const [members, setMembers] = useState<TUser[]>([]);
   useEffect(() => {
     if (!currentChat) {
@@ -34,6 +42,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       setMembers(formatChatMembers(currentChat.participants));
     }
   }, [currentChat]);
+
+  const handleCallStart = (userId: string) => {
+    startCall(currentChatId, [userId]);
+    setActiveCall(true);
+  };
+
+  const handleCallEnd = () => {
+    endCall();
+    setActiveCall(false);
+  };
   return (
     <div
       className={`absolute top-0 right-0 h-full w-72 bg-[#1e1e1e] text-white shadow-lg transform transition-transform duration-300 z-50 ${
@@ -53,7 +71,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       <div className="h-[calc(100%-56px)] overflow-y-auto no-scrollbar">
         <div className="space-y-2 p-2">
           {members.map((member) => (
-            <UserVideoPanel key={member._id} user={member} />
+            <UserVideoPanel
+              key={member._id}
+              user={member}
+              currentChatId={currentChatId}
+              onCallStart={handleCallStart}
+              onCallEnd={handleCallEnd}
+              isCallActive={activeCall}
+            />
           ))}
 
           {members.length === 0 && (

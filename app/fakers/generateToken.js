@@ -14,6 +14,21 @@ const users = [
     name: "Project Manager"
   },
   {
+    _id: "67cdb38d6af33763cde245bb",
+    role: "Developer",
+    name: "Raphael_Romaguera51"
+  },
+  {
+    _id: "67cdb38d6af33763cde245b9",
+    role: "Developer",
+    name: "Zoila_Turner17"
+  },
+  {
+    _id: "67cdb38d6af33763cde245b8",
+    role: "Developer",
+    name: "Chauncey_Rosenbaum40"
+  },
+  {
     _id: "67cd5c7ad1757dabb72ade5f",
     role: "User",
     name: "Kyle_Huel"

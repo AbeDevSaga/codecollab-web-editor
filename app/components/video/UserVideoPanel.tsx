@@ -4,8 +4,26 @@ import { TUser } from "../../types/type";
 
 interface userPanelProps {
   user: TUser;
+  currentChatId: string;
+  onCallStart: (userId: string) => void;
+  onCallEnd: () => void;
+  isCallActive: boolean;
 }
-const UserVideoPanel: React.FC<userPanelProps> = ({ user }) => {
+const UserVideoPanel: React.FC<userPanelProps> = ({
+  user,
+  currentChatId,
+  onCallStart,
+  onCallEnd,
+  isCallActive,
+}) => {
+  const handleCallClick = () => {
+    if (isCallActive) {
+      onCallEnd();
+    } else {
+      console.log("user id: ", user._id)
+      onCallStart(user._id);
+    }
+  };
   return (
     <div
       key={user._id}
@@ -20,8 +38,16 @@ const UserVideoPanel: React.FC<userPanelProps> = ({ user }) => {
         <span className="text-sm">{user.username}</span>
       </div>
       <div className="flex space-x-2">
-        <button className="text-green-400 hover:text-green-300 cursor-pointer" title="Call">
-          <FiPhoneCall size={18} />
+        <button
+          onClick={handleCallClick}
+          className={`${
+            isCallActive ? "text-red-400" : "text-green-400"
+          } hover:text-${
+            isCallActive ? "red-300" : "green-300"
+          } cursor-pointer`}
+          title={isCallActive ? "End Call" : "Start Call"}
+        >
+          {isCallActive ? <FiX size={18} /> : <FiPhoneCall size={18} />}
         </button>
       </div>
     </div>

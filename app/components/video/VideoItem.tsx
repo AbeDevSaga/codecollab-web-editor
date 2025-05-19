@@ -4,9 +4,10 @@ import BottomBar from "./BottomBar";
 interface VideoItemProps {
   stream: MediaStream;
   isLocal: boolean;
+  onCallEnd: () => void;
 }
 
-const VideoItem: React.FC<VideoItemProps> = ({ stream, isLocal }) => {
+const VideoItem: React.FC<VideoItemProps> = ({ stream, isLocal, onCallEnd }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const VideoItem: React.FC<VideoItemProps> = ({ stream, isLocal }) => {
           className="h-full w-full object-cover"
         />
       </div>
-      <BottomBar stream={stream} isLocal={isLocal} />
+      <BottomBar stream={stream} isLocal={isLocal} onCallEnd={onCallEnd} />
     </div>
   );
 };

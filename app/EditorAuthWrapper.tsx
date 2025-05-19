@@ -56,7 +56,6 @@ export default function EditorAuthWrapper({ children }: { children: React.ReactN
       // Initialize WebSocket connection
       const token = searchParams.get('token') || '';
       fileSocketService.connect(token);
-      videoSocketService.connect(token);
       // Using _id for both workspaceId and userId
       dispatch(fetchAllFiles());
       dispatch(fetchAllChats());

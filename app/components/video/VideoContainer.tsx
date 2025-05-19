@@ -46,48 +46,38 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
   });
   const localVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Initialize video service
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token"); // Get your auth token
-  //   videoSocketService.connect(token || " ");
-
-  //   videoSocketService.setRemoteStreamCallbacks(
-  //     (userId, stream) => {
-  //       setRemoteStreams((prev) => [...prev, { userId, stream }]);
-  //     },
-  //     (userId) => {
-  //       setRemoteStreams((prev) =>
-  //         prev.filter((stream) => stream.userId !== userId)
-  //       );
-  //     }
-  //   );
-
-  //   return () => {
-  //     videoSocketService.disconnect();
-  //   };
-  // }, []);
-  // Replace your current useEffect with this:
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    videoSocketService.connect(token || " ");
+    const initializeVideoService = async () => {
+      try {
+        const userId =
+          localStorage.getItem("userId") ||
+          `user-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Properly manage remote streams with no duplicates
-    const handleStreamAdded = (userId: string, stream: MediaStream) => {
-      setRemoteStreams((prev) => {
-        // Filter out any existing stream for this user
-        const filtered = prev.filter((s) => s.userId !== userId);
-        return [...filtered, { userId, stream }];
-      });
+        console.log("Initializing PeerJS with ID:", userId);
+        await videoSocketService.initialize(userId);
+        console.log("PeerJS initialized successfully");
+
+        const handleStreamAdded = (userId: string, stream: MediaStream) => {
+          console.log("New stream added from:", userId);
+          setRemoteStreams((prev) => [...prev, { userId, stream }]);
+        };
+
+        const handleStreamRemoved = (userId: string) => {
+          console.log("Stream removed from:", userId);
+          setRemoteStreams((prev) => prev.filter((s) => s.userId !== userId));
+        };
+
+        videoSocketService.setRemoteStreamCallbacks(
+          handleStreamAdded,
+          handleStreamRemoved
+        );
+      } catch (error) {
+        console.error("Failed to initialize video service:", error);
+        // Implement retry logic or fallback here
+      }
     };
 
-    const handleStreamRemoved = (userId: string) => {
-      setRemoteStreams((prev) => prev.filter((s) => s.userId !== userId));
-    };
-
-    videoSocketService.setRemoteStreamCallbacks(
-      handleStreamAdded,
-      handleStreamRemoved
-    );
+    initializeVideoService();
 
     return () => {
       videoSocketService.disconnect();
@@ -99,19 +89,38 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
   //     console.log("[1] Starting call process...");
 
   //     console.log("[2] Ensuring ready for broadcast...");
-  //     await videoSocketService.ensureReadyForBroadcast(chatGroupId);
-  //     console.log("[2] Broadcast ready confirmed");
+  //     const joinResult = await videoSocketService.joinRoom(chatGroupId);
+  //     console.log("[2] Broadcast ready confirmed", joinResult);
 
   //     console.log("[3] Getting user media...");
   //     const stream = await navigator.mediaDevices.getUserMedia({
   //       video: true,
   //       audio: true,
   //     });
-  //     console.log("[3] Got user media", stream.getTracks());
+  //     setLocalStream(stream);
+
+  //     // Verify media tracks
+  //     const tracks = stream.getTracks();
+  //     console.log(
+  //       "[3.1] Media tracks obtained:",
+  //       tracks.map((t) => ({
+  //         kind: t.kind,
+  //         enabled: t.enabled,
+  //         readyState: t.readyState,
+  //       }))
+  //     );
 
   //     if (localVideoRef.current) {
   //       console.log("[4] Setting local video stream");
   //       localVideoRef.current.srcObject = stream;
+
+  //       // Add event listeners to verify video element
+  //       localVideoRef.current.onloadedmetadata = () => {
+  //         console.log("[4.1] Local video metadata loaded");
+  //       };
+  //       localVideoRef.current.onerror = (e) => {
+  //         console.error("[4.2] Local video error:", e);
+  //       };
   //     }
 
   //     console.log("[5] Starting broadcasting...");
@@ -126,60 +135,43 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
   //     console.log("[6] Call state updated");
   //   } catch (error) {
   //     console.error("Error starting call:", error);
+  //     // Handle error state if needed
   //   }
   // };
   const startCall = async (chatGroupId: string, participants: string[]) => {
     try {
-      console.log("[1] Starting call process...");
+      console.log("Starting call with participants:", participants);
 
-      console.log("[2] Ensuring ready for broadcast...");
-      const joinResult = await videoSocketService.joinRoom(chatGroupId);
-      console.log("[2] Broadcast ready confirmed", joinResult);
-
-      console.log("[3] Getting user media...");
+      // Get user media first
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
       setLocalStream(stream);
 
-      // Verify media tracks
-      const tracks = stream.getTracks();
-      console.log(
-        "[3.1] Media tracks obtained:",
-        tracks.map((t) => ({
-          kind: t.kind,
-          enabled: t.enabled,
-          readyState: t.readyState,
-        }))
-      );
-
       if (localVideoRef.current) {
-        console.log("[4] Setting local video stream");
         localVideoRef.current.srcObject = stream;
-
-        // Add event listeners to verify video element
-        localVideoRef.current.onloadedmetadata = () => {
-          console.log("[4.1] Local video metadata loaded");
-        };
-        localVideoRef.current.onerror = (e) => {
-          console.error("[4.2] Local video error:", e);
-        };
       }
 
-      console.log("[5] Starting broadcasting...");
+      // Join room and start broadcasting
+      await videoSocketService.joinRoom(chatGroupId);
       await videoSocketService.startBroadcasting(stream);
-      console.log("[5] Broadcasting started");
+
+      // Call each participant
+      participants.forEach((userId) => {
+        if (userId !== localStorage.getItem("userId")) {
+          console.log("Calling participant:", userId);
+          videoSocketService.callUser(userId);
+        }
+      });
 
       setCallState({
         isActive: true,
         participants,
         currentChatId: chatGroupId,
       });
-      console.log("[6] Call state updated");
     } catch (error) {
       console.error("Error starting call:", error);
-      // Handle error state if needed
     }
   };
   const endCall = async () => {
@@ -288,17 +280,6 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
   };
 
   const renderVideoGrid = () => {
-    // const allStreams = [
-    //   ...remoteStreams,
-    //   ...(localVideoRef.current?.srcObject
-    //     ? [
-    //         {
-    //           userId: "local",
-    //           stream: localVideoRef.current.srcObject as MediaStream,
-    //         },
-    //       ]
-    //     : []),
-    // ];
     const allStreams = [
       ...remoteStreams,
       ...(localStream ? [{ userId: "local", stream: localStream }] : []),
@@ -330,6 +311,7 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
             key={userId}
             stream={stream}
             isLocal={userId === "local"}
+            onCallEnd={endCall}
           />
         ))}
       </div>

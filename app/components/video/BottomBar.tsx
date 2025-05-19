@@ -5,9 +5,10 @@ import { FiMic, FiVideo, FiPhoneOff, FiMicOff, FiVideoOff } from 'react-icons/fi
 interface BottomBarProps {
   stream: MediaStream;
   isLocal: boolean;
+  onCallEnd: () => void;
 }
 
-const BottomBar: React.FC<BottomBarProps> = ({ stream, isLocal }) => {
+const BottomBar: React.FC<BottomBarProps> = ({ stream, isLocal,onCallEnd  }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
 
@@ -57,7 +58,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ stream, isLocal }) => {
 
       {isLocal && (
         <button
-          onClick={() => videoSocketService.endCall()}
+          onClick={() => onCallEnd()}
           className="text-red-600 hover:text-red-500 transition-colors duration-200"
           title="End Call"
         >

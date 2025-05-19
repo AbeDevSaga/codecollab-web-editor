@@ -1,29 +1,69 @@
-import React from 'react';
-import { FiMic, FiVideo, FiPhoneOff } from 'react-icons/fi';
+import { videoSocketService } from '@/app/sockets/videoSocketService';
+import React, { useState } from 'react';
+import { FiMic, FiVideo, FiPhoneOff, FiMicOff, FiVideoOff } from 'react-icons/fi';
 
-const BottomBar = () => {
+interface BottomBarProps {
+  stream: MediaStream;
+  isLocal: boolean;
+}
+
+const BottomBar: React.FC<BottomBarProps> = ({ stream, isLocal }) => {
+  const [isMuted, setIsMuted] = useState(false);
+  const [isVideoOff, setIsVideoOff] = useState(false);
+
+  const toggleAudio = () => {
+    const newMutedState = !isMuted;
+    stream.getAudioTracks().forEach(track => {
+      track.enabled = !newMutedState;
+    });
+    setIsMuted(newMutedState);
+    
+    if (isLocal) {
+      // Notify server about mute state change
+      videoSocketService.toggleAudioMute(newMutedState);
+    }
+  };
+
+  const toggleVideo = () => {
+    const newVideoState = !isVideoOff;
+    stream.getVideoTracks().forEach(track => {
+      track.enabled = !newVideoState;
+    });
+    setIsVideoOff(newVideoState);
+    
+    if (isLocal) {
+      // Notify server about video state change
+      videoSocketService.toggleVideoMute(newVideoState);
+    }
+  };
+
   return (
     <div className="w-full bg-black bg-opacity-60 text-white px-3 py-2 flex items-center justify-center space-x-4 rounded-b-md">
       <button
-        className="hover:text-green-400 transition-colors duration-200"
-        title="Toggle Microphone"
+        onClick={toggleAudio}
+        className={`${isMuted ? 'text-red-400' : 'text-white'} hover:text-${isMuted ? 'red-300' : 'gray-300'} transition-colors duration-200`}
+        title={isMuted ? "Unmute" : "Mute"}
       >
-        <FiMic size={18} />
+        {isMuted ? <FiMicOff size={18} /> : <FiMic size={18} />}
       </button>
 
       <button
-        className="hover:text-blue-400 transition-colors duration-200"
-        title="Toggle Camera"
+        onClick={toggleVideo}
+        className={`${isVideoOff ? 'text-red-400' : 'text-white'} hover:text-${isVideoOff ? 'red-300' : 'gray-300'} transition-colors duration-200`}
+        title={isVideoOff ? "Turn on video" : "Turn off video"}
       >
-        <FiVideo size={18} />
+        {isVideoOff ? <FiVideoOff size={18} /> : <FiVideo size={18} />}
       </button>
 
-      <button
-        className="text-red-600 hover:text-red-500 transition-colors duration-200"
-        title="End Call"
-      >
-        <FiPhoneOff size={18} />
-      </button>
+      {isLocal && (
+        <button
+          onClick={() => videoSocketService.endCall()}
+          className="text-red-600 hover:text-red-500 transition-colors duration-200"
+          title="End Call"
+        >
+          <FiPhoneOff size={18} />
+        </button>
+      )}
     </div>
   );
 };
